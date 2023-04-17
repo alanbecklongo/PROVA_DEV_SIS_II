@@ -1,44 +1,59 @@
-const express = require ("express")
+const express = require("express")
 const routes = express.Router()
 
-let lista = [   {
+let lista = [
+  {
     "id": 1,
     "descricao": "Camiseta",
     "preco": 29.99,
     "cores": ["preto", "branco", "cinza"]
-    },
-    {
+  },
+  {
     "id": 2,
     "descricao": "Calça Jeans",
     "preco": 79.99,
     "cores": ["azul claro", "azul escuro"]
-    },
-    {
+  },
+  {
     "id": 3,
     "descricao": "Tênis Esportivo",
     "preco": 149.99,
     "cores": ["preto", "branco", "cinza", "azul"]
-    },
-    {
+  },
+  {
     "id": 4,
     "descricao": "Jaqueta de Couro",
     "preco": 99.99,
     "cores": ["preto", "marrom"]
-    }
-   
-
+  }
 ]
 
-routes.get("/",(req,res)=>{
-    res.status(200).json(lista)
+routes.get("/", (req, res) => {
+  res.status(200).json(lista)
 })
 
-routes.get("/:id",(req,res)=>{
-    res.status(200).json(lista[req.params.id-1])
-})
-routes.delete ("/:id",(req,res)=>{
-    lista.splice (req.params.id-1,1)
+routes.get("/:id", (req, res) => {
+  res.status(200).json(lista[req.params.id - 1])
 })
 
+routes.post("/", (req, res) => {
+  const { id, descricao, preco, cores } = req.body
+  lista.push({ id, descricao, preco, cores })
+  res.status(201).json({ message: "Produto adicionado com sucesso!", produto: { id, descricao, preco, cores } })
+})
 
-module.exports = routes 
+routes.put("/:id", (req, res) => {
+  const produto = lista[req.params.id - 1]
+  const { descricao, preco, cores } = req.body
+  produto.descricao = descricao || produto.descricao
+  produto.preco = preco || produto.preco
+  produto.cores = cores || produto.cores
+  res.status(200).json({ message: "Produto atualizado com sucesso!", produto })
+})
+
+routes.delete("/:id", (req, res) => {
+  lista.splice(req.params.id - 1, 1)
+  res.status(200).json({ message: "Produto excluído com sucesso!" })
+})
+
+module.exports = routes
