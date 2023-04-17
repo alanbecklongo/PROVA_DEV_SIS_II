@@ -1,5 +1,5 @@
 const express= require ("express")
-const routes = require("./rotas")
+const routes = require("./rotass")
 const server = express()
 
 server.use(routes)
